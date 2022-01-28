@@ -1,3 +1,5 @@
+"use strict";
+
 let title;
 let screens;
 let screenPrice;
