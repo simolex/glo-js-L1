@@ -31,3 +31,22 @@ console.log(screens.toLowerCase().split(", "));
 
 console.log("Откат посреднику за работу " + Math.round(rollbackPrice) + " рублей");
 console.log(`Итоговую стоимость ${servicePercentPrice} рублей`);
+
+switch (true) {
+  case fullPrice > 30000:
+    console.log("Даем скидку в 10%");
+    break;
+  case fullPrice > 15000 && fullPrice <= 30000:
+    console.log("Даем скидку в 5%");
+    break;
+  case (fullPrice) => 0 && fullPrice <= 15000:
+    console.log("Скидка не предусмотрена");
+    break;
+  case fullPrice <= 0:
+    console.log("Что-то пошло не так!!!");
+    break;
+
+  default:
+    console.log("Что-то пошло, совсем, не так!!!");
+    break;
+}
