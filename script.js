@@ -37,11 +37,10 @@ const getServicePercentPrices = function (price, rbPrice) {
   return Math.ceil(price - rbPrice);
 };
 
-const showTypeOf = function () {
-  console.log(typeof title);
-  console.log(typeof fullPrice);
-  console.log(typeof adaptive);
-  console.log(screens.length);
+const showTypeOf = function (varObject) {
+  for (let key in varObject) {
+    console.log(`Переменная ${key} содержит тип: ${typeof varObject[key]}`);
+  }
 };
 
 const getDiscountMessage = function (price) {
@@ -82,7 +81,12 @@ fullPrice = getFullPrice(screenPrice, allServicePrices);
 rollbackPrice = getRollbackPrice(fullPrice, rollback);
 servicePercentPrice = getServicePercentPrices(fullPrice, rollbackPrice);
 
-showTypeOf();
+showTypeOf({
+  title,
+  fullPrice,
+  adaptive,
+});
+
 console.log(screens.toLowerCase().split(", "));
 console.log(getRollbackMessage(servicePercentPrice));
 console.log(`Итоговую стоимость ${servicePercentPrice} рублей (без учета скидки)`);
