@@ -66,7 +66,8 @@ const getDiscountMessage = function (price) {
   return message;
 };
 
-//функция getRollbackMessage переименована в getDiscountMessage
+//Функция getRollbackMessage устарела
+//Далее следует использовать в getDiscountMessage
 const getRollbackMessage = getDiscountMessage;
 
 for (let i = 0; i < 2; i++) {
