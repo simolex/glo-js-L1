@@ -39,7 +39,7 @@ const getServicePercentPrices = function (price, rbPrice) {
 
 const showTypeOf = function (varObject) {
   for (let key in varObject) {
-    console.log(`Переменная ${key} содержит тип: ${typeof varObject[key]}`);
+    console.warn(`Переменная ${key} содержит тип: ${typeof varObject[key]}`);
   }
 };
 
