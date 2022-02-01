@@ -1,51 +1,92 @@
 "use strict";
 
-const title = prompt("Как называется ваш проект?"); //"Учебный проект: JS 23.0";
+let title = prompt("Как называется ваш проект?"); //  КаЛьКулятор Верстки
 const screens = prompt("Какие типы экранов нужно разработать?"); //Простые, Сложные, Интерактивные
 const screenPrice = +prompt("Сколько будет стоить данная работа?");
 const rollback = 15;
-let fullPrice = screenPrice;
 const adaptive = confirm("Нужен ли адаптив на сайте?");
+
 let services = [];
-let servicePercentPrice, rollbackPrice;
+let fullPrice, allServicePrices, servicePercentPrice, rollbackPrice;
+
+const getTitle = function (title) {
+  let result;
+  result = title.trim();
+  return result[0].toUpperCase() + result.substring(1).toLowerCase();
+};
+
+const getAllServicePrices = function (allServices) {
+  let sumPrices = 0;
+
+  allServices.forEach((service) => {
+    sumPrices += service.price;
+  });
+
+  return sumPrices;
+};
+
+const getFullPrice = function (basePrice, addPrice) {
+  return basePrice + addPrice;
+};
+
+const getRollbackPrice = function (price, rbPercent) {
+  return (price * rbPercent) / 100;
+};
+
+const getServicePercentPrices = function (price, rbPrice) {
+  return Math.ceil(price - rbPrice);
+};
+
+const showTypeOf = function () {
+  console.log(typeof title);
+  console.log(typeof fullPrice);
+  console.log(typeof adaptive);
+  console.log(screens.length);
+};
+
+const getDiscountMessage = function (price) {
+  let message;
+  switch (true) {
+    case price > 30000:
+      message = "Даем скидку в 10%";
+      break;
+    case price > 15000 && price <= 30000:
+      message = "Даем скидку в 5%";
+      break;
+    case price >= 0 && price <= 15000:
+      message = "Скидка не предусмотрена";
+      break;
+    case price <= 0:
+      message = "Что-то пошло не так!!!";
+      break;
+    default:
+      message = "Что-то пошло, совсем, не так!!!";
+      break;
+  }
+  return message;
+};
+
+//функция getRollbackMessage переименована в getDiscountMessage
+const getRollbackMessage = getDiscountMessage;
 
 for (let i = 0; i < 2; i++) {
   services[i] = {};
   services[i].name = prompt("Какой дополнительный тип услуги нужен?");
   services[i].price = +prompt("Сколько это будет стоить?");
-  fullPrice += services[i].price;
 }
-rollbackPrice = (fullPrice * rollback) / 100;
-servicePercentPrice = Math.ceil(fullPrice - rollbackPrice);
 
-// console.log(typeof title);
-// console.log(typeof fullPrice);
-// console.log(typeof adaptive);
+title = getTitle(title);
+allServicePrices = getAllServicePrices(services);
+fullPrice = getFullPrice(screenPrice, allServicePrices);
+rollbackPrice = getRollbackPrice(fullPrice, rollback);
+servicePercentPrice = getServicePercentPrices(fullPrice, rollbackPrice);
 
-// console.log(screens.length);
-
-console.log("Стоимость верстки экранов " + screenPrice + " рублей");
-console.log("Стоимость разработки сайта " + fullPrice + " рублей");
-
+showTypeOf();
 console.log(screens.toLowerCase().split(", "));
+console.log(getRollbackMessage(servicePercentPrice));
+console.log(`Итоговую стоимость ${servicePercentPrice} рублей (без учета скидки)`);
 
-console.log("Откат посреднику за работу " + Math.round(rollbackPrice) + " рублей");
-console.log(`Итоговую стоимость ${servicePercentPrice} рублей`);
+// console.log("Стоимость верстки экранов " + screenPrice + " рублей");
+// console.log("Стоимость разработки сайта " + fullPrice + " рублей");
 
-switch (true) {
-  case fullPrice > 30000:
-    console.log("Даем скидку в 10%");
-    break;
-  case fullPrice > 15000 && fullPrice <= 30000:
-    console.log("Даем скидку в 5%");
-    break;
-  case fullPrice >= 0 && fullPrice <= 15000:
-    console.log("Скидка не предусмотрена");
-    break;
-  case fullPrice <= 0:
-    console.log("Что-то пошло не так!!!");
-    break;
-  default:
-    console.log("Что-то пошло, совсем, не так!!!");
-    break;
-}
+// console.log("Откат посреднику за работу " + Math.round(rollbackPrice) + " рублей");
