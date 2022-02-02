@@ -1,47 +1,81 @@
 "use strict";
 
-let title = prompt("Как называется ваш проект?"); //  КаЛьКулятор Верстки
-const screens = prompt("Какие типы экранов нужно разработать?"); //Простые, Сложные, Интерактивные
-const screenPrice = +prompt("Сколько будет стоить данная работа?");
 const rollback = 15;
-const adaptive = confirm("Нужен ли адаптив на сайте?");
 
+let title, screens, screenPrice, adaptive;
 let services = [];
 
+//Функции валидации
+const isNumber = function (num) {
+  return !isNaN(parseFloat(num)) && isFinite(num) && num.trim() == num;
+  //Реализована проверка по Усл. заданию 1 ----------^^^
+};
+const isText = function (text) {
+  return text && text.length > 0 && text.trim() == text;
+};
+
+//Анкетироване пользователя по проекту
+const asking = function () {
+  do {
+    title = prompt("Как называется ваш проект?", "КаЛьКулятор Верстки");
+  } while (!isText(title));
+  do {
+    screens = prompt("Какие типы экранов нужно разработать?", "Простые, Сложные, Интерактивные");
+  } while (!isText(screens));
+  do {
+    screenPrice = prompt("Сколько будет стоить данная работа?", 30000);
+  } while (!isNumber(screenPrice));
+  screenPrice -= 0;
+  adaptive = confirm("Нужен ли адаптив на сайте?");
+};
+//Нормализация имени проекта
 const getTitle = function (title) {
   let result;
   result = title.trim();
   return result[0].toUpperCase() + result.substring(1).toLowerCase();
 };
-
+//Обработка дополнительных услуг
 const getAllServicePrices = function (allServices) {
+  let oneService;
   let sumPrices = 0;
 
-  allServices.forEach((service) => {
-    sumPrices += service.price;
-  });
+  for (let i = 0; i < 2; i++) {
+    oneService = {};
 
+    do {
+      oneService.name = prompt("Какой дополнительный тип услуги нужен?");
+    } while (!isText(oneService.name));
+
+    do {
+      oneService.price = prompt(`Сколько это будет стоить, услуга: "${oneService.name}"?`);
+    } while (!isNumber(oneService.price));
+
+    oneService.price -= 0;
+
+    sumPrices += oneService.price;
+    allServices[i] = oneService;
+  }
   return sumPrices;
 };
-
+//Вычисление полной стоимости
 function getFullPrice(basePrice, addPrice) {
   return basePrice + addPrice;
 }
-
+//Вычисление ставки посредника
 const getRollbackPrice = function (price, rbPercent) {
   return (price * rbPercent) / 100;
 };
-
+//Вычисление ставки разработчика
 const getServicePercentPrices = function (price, rbPrice) {
   return Math.ceil(price - rbPrice);
 };
-
+//Дамп переменных
 const showTypeOf = function (varObject) {
   for (let key in varObject) {
-    console.warn(`Переменная ${key} содержит тип: ${typeof varObject[key]}`);
+    console.log(varObject[key], `Имя: ${key}, тип: ${typeof varObject[key]}`);
   }
 };
-
+//Вычисление возможности предоставить скидку
 //const getRollbackMessage = getDiscountMessage;
 const getDiscountMessage = function (price) {
   let message;
@@ -65,28 +99,29 @@ const getDiscountMessage = function (price) {
   return message;
 };
 
-for (let i = 0; i < 2; i++) {
-  services[i] = {};
-  services[i].name = prompt("Какой дополнительный тип услуги нужен?");
-  services[i].price = +prompt("Сколько это будет стоить?");
-}
-
+asking();
 title = getTitle(title);
 const allServicePrices = getAllServicePrices(services);
 const fullPrice = getFullPrice(screenPrice, allServicePrices);
 const rollbackPrice = getRollbackPrice(fullPrice, rollback);
 const servicePercentPrice = getServicePercentPrices(fullPrice, rollbackPrice);
 
-showTypeOf({
-  title,
-  fullPrice,
-  adaptive,
-});
-
 console.log(screens.toLowerCase().split(", "));
 console.log(getDiscountMessage(servicePercentPrice));
 console.log(`Итоговую стоимость ${servicePercentPrice} рублей (без учета скидки)`);
 
+console.log("|-------Damps----->");
+showTypeOf({
+  title,
+  screens,
+  screenPrice,
+  adaptive,
+  services,
+  allServicePrices,
+  fullPrice,
+  rollbackPrice,
+  servicePercentPrice,
+});
 // console.log("Стоимость верстки экранов " + screenPrice + " рублей");
 // console.log("Стоимость разработки сайта " + fullPrice + " рублей");
 
