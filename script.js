@@ -7,7 +7,6 @@ const rollback = 15;
 const adaptive = confirm("Нужен ли адаптив на сайте?");
 
 let services = [];
-let fullPrice, allServicePrices, servicePercentPrice, rollbackPrice;
 
 const getTitle = function (title) {
   let result;
@@ -25,9 +24,9 @@ const getAllServicePrices = function (allServices) {
   return sumPrices;
 };
 
-const getFullPrice = function (basePrice, addPrice) {
+function getFullPrice(basePrice, addPrice) {
   return basePrice + addPrice;
-};
+}
 
 const getRollbackPrice = function (price, rbPercent) {
   return (price * rbPercent) / 100;
@@ -43,6 +42,7 @@ const showTypeOf = function (varObject) {
   }
 };
 
+//const getRollbackMessage = getDiscountMessage;
 const getDiscountMessage = function (price) {
   let message;
   switch (true) {
@@ -65,10 +65,6 @@ const getDiscountMessage = function (price) {
   return message;
 };
 
-//Функция getRollbackMessage устарела
-//Далее следует использовать в getDiscountMessage
-const getRollbackMessage = getDiscountMessage;
-
 for (let i = 0; i < 2; i++) {
   services[i] = {};
   services[i].name = prompt("Какой дополнительный тип услуги нужен?");
@@ -76,10 +72,10 @@ for (let i = 0; i < 2; i++) {
 }
 
 title = getTitle(title);
-allServicePrices = getAllServicePrices(services);
-fullPrice = getFullPrice(screenPrice, allServicePrices);
-rollbackPrice = getRollbackPrice(fullPrice, rollback);
-servicePercentPrice = getServicePercentPrices(fullPrice, rollbackPrice);
+const allServicePrices = getAllServicePrices(services);
+const fullPrice = getFullPrice(screenPrice, allServicePrices);
+const rollbackPrice = getRollbackPrice(fullPrice, rollback);
+const servicePercentPrice = getServicePercentPrices(fullPrice, rollbackPrice);
 
 showTypeOf({
   title,
@@ -88,7 +84,7 @@ showTypeOf({
 });
 
 console.log(screens.toLowerCase().split(", "));
-console.log(getRollbackMessage(servicePercentPrice));
+console.log(getDiscountMessage(servicePercentPrice));
 console.log(`Итоговую стоимость ${servicePercentPrice} рублей (без учета скидки)`);
 
 // console.log("Стоимость верстки экранов " + screenPrice + " рублей");
