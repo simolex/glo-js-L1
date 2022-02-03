@@ -22,9 +22,11 @@ const asking = function () {
   do {
     title = prompt("Как называется ваш проект?", "КаЛьКулятор Верстки");
   } while (!isNoEmpty(title));
+
   do {
     screens = prompt("Какие типы экранов нужно разработать?", "Простые, Сложные, Интерактивные");
   } while (!isNoEmpty(screens));
+  screens = cleanStringLine(screens);
   do {
     screenPrice = prompt("Сколько будет стоить данная работа?", 30000);
   } while (!isNumber(screenPrice));
@@ -43,6 +45,11 @@ const getNumber = function (num) {
   return parseFloat(num);
 };
 
+const cleanStringLine = function (line) {
+  line += "";
+  return line.trim();
+};
+
 //Обработка дополнительных услуг
 const getAllServicePrices = function (allServices) {
   let oneService;
@@ -54,6 +61,7 @@ const getAllServicePrices = function (allServices) {
     do {
       oneService.name = prompt("Какой дополнительный тип услуги нужен?");
     } while (!isNoEmpty(oneService.name));
+    oneService.name = cleanStringLine(oneService.name);
 
     do {
       oneService.price = prompt(`Сколько это будет стоить, услуга: "${oneService.name}"?`);
