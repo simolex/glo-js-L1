@@ -7,33 +7,42 @@ let services = [];
 
 //Функции валидации
 const isNumber = function (num) {
-  return !isNaN(parseFloat(num)) && isFinite(num) && num.trim() == num;
+  num += "";
+  return !isNaN(parseFloat(num)) && isFinite(num); // && num.trim().length == num.length;
   //Реализована проверка по Усл. заданию 1 ----------^^^
 };
-const isText = function (text) {
-  return text && text.length > 0 && text.trim() == text;
+
+const isNoEmpty = function (text) {
+  text += "";
+  return text && text.trim().length > 0;
 };
 
 //Анкетироване пользователя по проекту
 const asking = function () {
   do {
     title = prompt("Как называется ваш проект?", "КаЛьКулятор Верстки");
-  } while (!isText(title));
+  } while (!isNoEmpty(title));
   do {
     screens = prompt("Какие типы экранов нужно разработать?", "Простые, Сложные, Интерактивные");
-  } while (!isText(screens));
+  } while (!isNoEmpty(screens));
   do {
     screenPrice = prompt("Сколько будет стоить данная работа?", 30000);
   } while (!isNumber(screenPrice));
-  screenPrice -= 0;
+  screenPrice = getNumber(screenPrice);
   adaptive = confirm("Нужен ли адаптив на сайте?");
 };
+
 //Нормализация имени проекта
 const getTitle = function (title) {
   let result;
   result = title.trim();
   return result[0].toUpperCase() + result.substring(1).toLowerCase();
 };
+
+const getNumber = function (num) {
+  return parseFloat(num);
+};
+
 //Обработка дополнительных услуг
 const getAllServicePrices = function (allServices) {
   let oneService;
@@ -44,13 +53,13 @@ const getAllServicePrices = function (allServices) {
 
     do {
       oneService.name = prompt("Какой дополнительный тип услуги нужен?");
-    } while (!isText(oneService.name));
+    } while (!isNoEmpty(oneService.name));
 
     do {
       oneService.price = prompt(`Сколько это будет стоить, услуга: "${oneService.name}"?`);
     } while (!isNumber(oneService.price));
 
-    oneService.price -= 0;
+    oneService.price = getNumber(oneService.price);
 
     sumPrices += oneService.price;
     allServices[i] = oneService;
