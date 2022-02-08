@@ -1,5 +1,22 @@
 "use strict";
 
+const titleProject = document.getElementsByTagName("h1")[0]; //.textContent;
+
+const handlerButtons = document.getElementsByClassName("handler_btn");
+const btnStart = handlerButtons.start;
+const btnReset = handlerButtons.reset;
+
+const btnPlus = document.querySelector(".screen-btn");
+
+const percentItems = document.querySelectorAll(".other-items.percent");
+const numberItems = document.querySelectorAll(".other-items.number");
+
+const controlRollback = document.querySelector(".rollback input[type=range]");
+const valueRollback = document.querySelector(".rollback span.range-value");
+
+const totalInputs = [...document.getElementsByClassName("total-input")];
+let screens = document.querySelectorAll(".screen");
+
 const appData = {
   title: "",
   screens: [],
@@ -37,7 +54,7 @@ const appData = {
     appData.getRollbackPrice();
     appData.getServicePercentPrices();
 
-    appData.logger(appData);
+    //appData.logger(appData);
   },
 
   //Анкетироване пользователя по проекту
@@ -118,9 +135,10 @@ const appData = {
   logger: function (varObject) {
     for (let key in varObject) {
       if (typeof varObject[key] == "function") {
-        console.log(`Имя: ${key}, тип: ${typeof varObject[key]}`);
+        console.log(`%cИмя: ${key}, тип: ${typeof varObject[key]}`, "color: blue;");
       } else {
-        console.log(varObject[key], `Имя: ${key}, тип: ${typeof varObject[key]}`);
+        console.log(`%cИмя: ${key}, тип: ${typeof varObject[key]}, значение:`, "color: green;");
+        console.log(varObject[key]);
       }
     }
   },
@@ -150,4 +168,17 @@ const appData = {
   },
 };
 
-appData.start();
+//appData.start();
+
+appData.logger({
+  titleProject,
+  btnStart,
+  btnReset,
+  btnPlus,
+  percentItems,
+  numberItems,
+  controlRollback,
+  valueRollback,
+  totalInputs,
+  screens,
+});
