@@ -60,11 +60,9 @@ const appData = {
       appData.addScreenEvents(screen);
     });
 
-    controlRollback.value = appData.rollback;
-    valueRollback.innerText = appData.rollback + "%";
+    appData.updateRollback(appData.rollback, true);
     controlRollback.addEventListener("input", () => {
-      appData.rollback = +controlRollback.value;
-      valueRollback.innerText = controlRollback.value + "%";
+      appData.updateRollback(controlRollback.value);
       if (appData.hasResult) {
         appData.getServicePercentPrices();
         appData.showResult();
@@ -92,21 +90,6 @@ const appData = {
   },
   reset: function () {
     document.location.reload();
-  },
-
-  addScreenEvents: function (screen) {
-    const select = screen.querySelector("select");
-    const input = screen.querySelector("input");
-
-    select.addEventListener("change", () => {
-      select.style.borderColor = "";
-      select.style.color = "";
-    });
-
-    input.addEventListener("input", () => {
-      input.style.borderColor = "";
-      input.style.color = "";
-    });
   },
 
   addScreens: function () {
@@ -151,6 +134,21 @@ const appData = {
     appData.addScreenEvents(cloneScreen);
     screens[lastIndex].after(cloneScreen);
     screens = document.querySelectorAll(".screen");
+  },
+
+  addScreenEvents: function (screen) {
+    const select = screen.querySelector("select");
+    const input = screen.querySelector("input");
+
+    select.addEventListener("change", () => {
+      select.style.borderColor = "";
+      select.style.color = "";
+    });
+
+    input.addEventListener("input", () => {
+      input.style.borderColor = "";
+      input.style.color = "";
+    });
   },
 
   addServicesPercent: function () {
@@ -205,6 +203,14 @@ const appData = {
 
     appData.getServicePercentPrices();
     appData.hasResult = true;
+  },
+
+  updateRollback: function (sizeRollback, needInit = false) {
+    if (needInit) {
+      controlRollback.value = sizeRollback;
+    }
+    appData.rollback = +sizeRollback;
+    valueRollback.innerText = sizeRollback + "%";
   },
 
   //Вычисление ставки посредника
