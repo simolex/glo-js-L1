@@ -53,6 +53,7 @@ const appData = {
   init: function () {
     this.addTitle();
     btnStart.addEventListener("click", appData.start);
+    btnReset.addEventListener("click", appData.reset);
     btnPlus.addEventListener("click", appData.addScreenBlock);
 
     screens.forEach((screen) => {
@@ -82,8 +83,15 @@ const appData = {
     appData.addServicesPercent();
     appData.addServicesNumber();
     appData.getFullPrice();
+    if (appData.hasResult) {
+      btnReset.style.display = "";
+      btnStart.style.display = "none";
+    }
     appData.showResult();
     //appData.logger(appData);
+  },
+  reset: function () {
+    document.location.reload();
   },
 
   addScreenEvents: function (screen) {
