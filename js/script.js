@@ -1,10 +1,10 @@
 "use strict";
 
-const titleProject = document.getElementsByTagName("h1")[0]; //.textContent;
+const titleProject = document.getElementById("title");
 
-const handlerButtons = document.getElementsByClassName("handler_btn");
-const btnStart = handlerButtons.start;
-const btnReset = handlerButtons.reset;
+//const handlerButtons = document.getElementById("start");
+const btnStart = document.getElementById("start");
+const btnReset = document.getElementById("reset");
 
 const btnPlus = document.querySelector(".screen-btn");
 
@@ -26,7 +26,6 @@ const appData = {
   title: "",
   screens: [],
   screenPrice: 0,
-  adaptive: false,
   servicesPercent: {},
   servicesNumber: {},
   servicePricesPercent: 0,
@@ -82,6 +81,7 @@ const appData = {
     this.addServicesNumber();
     this.getFullPrice();
     if (this.hasResult) {
+      this.disableScreens();
       btnReset.style.display = "";
       btnStart.style.display = "none";
     }
@@ -91,7 +91,43 @@ const appData = {
   },
 
   reset: function () {
-    document.location.reload();
+    this.screens = [];
+    screenInputs.forEach((item, index) => {
+      if (index > 0) {
+        item.remove();
+      } else {
+        item.querySelector("select").selectedIndex = 0;
+        item.querySelector("input").value = "";
+      }
+    });
+    screenInputs = document.querySelectorAll(".screen");
+    this.disableScreens(false);
+
+    this.screenPrice = 0;
+    this.servicesPercent = {};
+    this.servicesNumber = {};
+    this.servicePricesPercent = 0;
+    this.servicePricesNumber = 0;
+    percentItems.forEach((item) => {
+      item.querySelector("input[type=checkbox]").checked = false;
+    });
+    numberItems.forEach((item) => {
+      item.querySelector("input[type=checkbox]").checked = false;
+    });
+
+    this.rollback = 15;
+    this.updateRollback(this.rollback, true);
+    this.fullPrice = 0;
+    this.rollbackPrice = 0;
+    this.servicePercentPrice = 0;
+    this.count = 0;
+    this.hasResult = false;
+    [total, totalCount, totalCountOther, totalFullCount, totalCountRollback].forEach((item) => {
+      item.value = "0";
+    });
+
+    btnReset.style.display = "none";
+    btnStart.style.display = "";
   },
 
   addScreens: function () {
@@ -150,6 +186,15 @@ const appData = {
     input.addEventListener("input", () => {
       input.style.borderColor = "";
       input.style.color = "";
+    });
+  },
+
+  disableScreens: function (state = true) {
+    screenInputs.forEach((screen, index) => {
+      const select = screen.querySelector("select");
+      const input = screen.querySelector("input");
+      select.disabled = state;
+      input.disabled = state;
     });
   },
 
