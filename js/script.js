@@ -66,7 +66,10 @@ const appData = {
     selectCmsType.addEventListener("input", (e) => {
       this.selectCms(e.target);
     });
-    inputCmsPercent.addEventListener("input");
+    inputCmsPercent.addEventListener("input", (e) => {
+      e.target.style.borderColor = "";
+      e.target.style.color = "";
+    });
     screenInputs.forEach((screen) => {
       this.addScreenEvents(screen);
     });
@@ -86,10 +89,11 @@ const appData = {
   },
 
   start: function () {
-    if (!this.addScreens()) {
-      return false;
-    }
-    if (!this.validateCmsBlock()) {
+    let isOk = true;
+    isOk = this.addScreens() && isOk;
+    isOk = this.validateCmsBlock() && isOk;
+
+    if (!isOk) {
       return false;
     }
     this.addServicesPercent();
@@ -137,9 +141,18 @@ const appData = {
     this.servicePercentPrice = 0;
     this.count = 0;
     this.hasResult = false;
+    this.isCmsSelected = false;
+    this.getCmsPercent = () => 0;
+
     [total, totalCount, totalCountOther, totalFullCount, totalCountRollback].forEach((item) => {
       item.value = "0";
     });
+
+    checkCmsOpen.checked = false;
+    blockCmsVariants.style.display = "none";
+    selectCmsType.selectedIndex = 0;
+    inputCmsPercent.closest(".main-controls__input").style.display = "none";
+    inputCmsPercent.value = "";
 
     btnReset.style.display = "none";
     btnStart.style.display = "";
@@ -152,7 +165,8 @@ const appData = {
         selectCmsType.style.borderColor = "red";
         selectCmsType.style.color = "red";
         isValid = false;
-      } else if (selectCmsType.value == "other") {
+      }
+      if (selectCmsType.value === "other") {
         if (inputCmsPercent.value === "") {
           inputCmsPercent.style.borderColor = "red";
           inputCmsPercent.style.color = "red";
@@ -160,6 +174,7 @@ const appData = {
         }
       }
     }
+
     return isValid;
   },
 
@@ -297,6 +312,8 @@ const appData = {
     }
 
     this.fullPrice = this.screenPrice + this.servicePricesNumber + this.servicePricesPercent;
+
+    this.fullPrice += (this.fullPrice * this.getCmsPercent()) / 100;
 
     this.getServicePercentPrices();
     this.hasResult = true;
