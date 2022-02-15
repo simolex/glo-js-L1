@@ -63,9 +63,7 @@ const appData = {
     btnReset.addEventListener("click", () => this.reset());
     btnPlus.addEventListener("click", () => this.addScreenBlock());
     checkCmsOpen.addEventListener("click", (e) => this.openCmsBlock(e.target.checked));
-    selectCmsType.addEventListener("input", (e) => {
-      this.selectCms(e.target);
-    });
+    selectCmsType.addEventListener("input", (e) => this.selectCms(e.target));
     inputCmsPercent.addEventListener("input", (e) => {
       e.target.style.borderColor = "";
       e.target.style.color = "";
@@ -187,15 +185,10 @@ const appData = {
     that.style.borderColor = "";
     that.style.color = "";
 
-    inputCmsPercent.closest(".main-controls__input").style.display =
-      that.value == "other" ? "" : "none";
+    inputCmsPercent.closest(".main-controls__input").style.display = that.value == "other" ? "" : "none";
 
     this.getCmsPercent =
-      that.value == "other"
-        ? () => +inputCmsPercent.value
-        : that.value == "50"
-        ? () => 50
-        : () => 0;
+      that.value == "other" ? () => +inputCmsPercent.value : that.selectedIndex === 0 ? () => 0 : () => +that.value;
   },
 
   addScreens: function () {
@@ -297,10 +290,7 @@ const appData = {
   //Вычисление полной стоимости
   getFullPrice: function () {
     //Расчет стоимости экранов
-    this.screenPrice = this.screens.reduce(
-      (screenPrice, oneScreen) => screenPrice + oneScreen.price,
-      0
-    );
+    this.screenPrice = this.screens.reduce((screenPrice, oneScreen) => screenPrice + oneScreen.price, 0);
 
     //Расчет дополнительных услуг
     for (let key in this.servicesNumber) {
