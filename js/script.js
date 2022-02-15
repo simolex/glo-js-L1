@@ -98,7 +98,7 @@ const appData = {
     this.addServicesNumber();
     this.getFullPrice();
     if (this.hasResult) {
-      this.disableScreens();
+      this.disableControls();
       btnReset.style.display = "";
       btnStart.style.display = "none";
     }
@@ -118,7 +118,7 @@ const appData = {
       }
     });
     screenInputs = document.querySelectorAll(".screen");
-    this.disableScreens(false);
+    this.disableControls(false);
 
     this.screenPrice = 0;
     this.servicesPercent = {};
@@ -250,8 +250,12 @@ const appData = {
     });
   },
 
-  disableScreens: function (state = true) {
-    screenInputs.forEach((screen, index) => {
+  disableControls: function (state = true) {
+    [checkCmsOpen, selectCmsType, inputCmsPercent].forEach((control) => {
+      control.disabled = state;
+    });
+
+    screenInputs.forEach((screen) => {
       const select = screen.querySelector("select");
       const input = screen.querySelector("input");
       select.disabled = state;
