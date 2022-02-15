@@ -20,6 +20,11 @@ const totalCountOther = document.getElementById("total-count-other");
 const totalFullCount = document.getElementById("total-full-count");
 const totalCountRollback = document.getElementById("total-count-rollback");
 
+const checkCmsOpen = document.getElementById("cms-open");
+const blockCmsVariants = document.querySelector(".hidden-cms-variants");
+const selectCmsType = document.getElementById("cms-select");
+const inputCmsPercent = document.getElementById("cms-other-input");
+
 let screenInputs = document.querySelectorAll(".screen");
 
 const appData = {
@@ -38,6 +43,9 @@ const appData = {
   count: 0,
   hasResult: false,
 
+  isCmsSelected: false,
+  getCmsPercent: () => 0,
+
   //Методы валидации
   isNoStrongNumber: function (num) {
     num += "";
@@ -54,7 +62,11 @@ const appData = {
     btnStart.addEventListener("click", () => this.start());
     btnReset.addEventListener("click", () => this.reset());
     btnPlus.addEventListener("click", () => this.addScreenBlock());
-
+    checkCmsOpen.addEventListener("click", (e) => this.openCmsBlock(e.target.checked));
+    selectCmsType.addEventListener("input", (e) => {
+      this.selectCms(e.target);
+    });
+    inputCmsPercent.addEventListener("input");
     screenInputs.forEach((screen) => {
       this.addScreenEvents(screen);
     });
@@ -75,6 +87,9 @@ const appData = {
 
   start: function () {
     if (!this.addScreens()) {
+      return false;
+    }
+    if (!this.validateCmsBlock()) {
       return false;
     }
     this.addServicesPercent();
@@ -128,6 +143,44 @@ const appData = {
 
     btnReset.style.display = "none";
     btnStart.style.display = "";
+  },
+
+  validateCmsBlock: function () {
+    let isValid = true;
+    if (this.isCmsSelected) {
+      if (selectCmsType.selectedIndex === 0) {
+        selectCmsType.style.borderColor = "red";
+        selectCmsType.style.color = "red";
+        isValid = false;
+      } else if (selectCmsType.value == "other") {
+        if (inputCmsPercent.value === "") {
+          inputCmsPercent.style.borderColor = "red";
+          inputCmsPercent.style.color = "red";
+          isValid = false;
+        }
+      }
+    }
+    return isValid;
+  },
+
+  openCmsBlock: function (isOpen) {
+    this.isCmsSelected = isOpen;
+    blockCmsVariants.style.display = isOpen ? "" : "none";
+  },
+
+  selectCms: function (that) {
+    that.style.borderColor = "";
+    that.style.color = "";
+
+    inputCmsPercent.closest(".main-controls__input").style.display =
+      that.value == "other" ? "" : "none";
+
+    this.getCmsPercent =
+      that.value == "other"
+        ? () => +inputCmsPercent.value
+        : that.value == "50"
+        ? () => 50
+        : () => 0;
   },
 
   addScreens: function () {
